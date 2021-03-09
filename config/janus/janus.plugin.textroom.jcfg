@@ -7,22 +7,14 @@
 #}
 
 general: {
-	#admin_key = "supersecret"		# If set, rooms can be created via API only
+	admin_key = "d0f69959-90d9-44b5-9286-8f7d9512ef60"		# If set, rooms can be created via API only
 									# if this key is provided in the request
 	json = "indented"				# Whether the data channel JSON messages should be indented (default),
 									# plain (no indentation) or compact (no indentation and no spaces)
-	#events = false					# Whether events should be sent to event
+	events = true					# Whether events should be sent to event
 									# handlers (default=true)
 
 	# By default, integers are used as a unique ID for rooms. In case you
 	# want to use strings instead (e.g., a UUID), set string_ids to true.
 	#string_ids = true
-}
-
-room-1234: {
-	description = "Demo Room"
-	# is_private = true
-	secret = "adminpwd"
-	# pin = "roompwd"
-	# post = "http://example.com/forward/here"
 }
