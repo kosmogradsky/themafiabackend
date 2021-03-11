@@ -1,0 +1,15 @@
+[Unit]
+Description=Janus WebRTC Server
+After=network.target
+
+[Service]
+User=root
+Nice=1
+Type=forking
+Restart=on-abnormal
+WorkingDirectory=/opt/janus/share/janus/recordings
+ExecStart=/opt/janus/bin/janus
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
