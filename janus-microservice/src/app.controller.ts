@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import {
   MessagePattern,
   RmqContext,
@@ -8,6 +8,8 @@ import {
 import { Logger } from '@nestjs/common';
 
 import { AppService } from './app.service';
+
+import { JanusMessage } from './interfaces/janusmessage.interface'
 
 @Controller()
 export class AppController {
@@ -20,9 +22,14 @@ export class AppController {
     @Payload() data: unknown,
     @Ctx() context: RmqContext
   ) {
-    //TODO: error handling, interface for message
-    const originalMessages = JSON.parse(context.getMessage().content.toString());
-    originalMessages.map((message: any) => {
+    let originalMessages = context.getMessage().content.toString();
+    try {
+      originalMessages = JSON.parse(originalMessages);
+    } catch (e) {
+      this.logger.log(`Wrong message from Janus: ${originalMessages}`)
+      return false;
+    }
+    originalMessages.map((message: JanusMessage) => {
       this.logger.log(`New Janus event ID ${message.event.id}, type ${message.type}`);
     })
   }
