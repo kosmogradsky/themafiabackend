@@ -16,11 +16,16 @@ async function bootstrap() {
         durable: false
       }
     }
+  });
+
+  const microserviceTCP = app.connectMicroservice({
+    transport: Transport.TCP,
+    options: {
+      port: process.env.TCP_PORT || 3001,
+    },
   })
 
-
-  //const app = await NestFactory.create(AppModule);
-  //await app.listen(3000);
+  await app.listen(3000);
   await app.startAllMicroservicesAsync();
 }
 
