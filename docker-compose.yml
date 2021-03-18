@@ -15,10 +15,18 @@ services:
       - 15672:15672
     networks:
       - mafia-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     restart: always
 
   janus:
-    image: "canyan/janus-gateway:latest"
+    build:
+      context: ./config/docker/janus
+      dockerfile: Dockerfile
+    entrypoint: ["wait-for-it.sh" , "rabbitmq:15672", "--strict" , "--timeout=300" , "--"]
     command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
     volumes:
       - ./config/janus:/usr/local/etc/janus
@@ -32,6 +40,15 @@ services:
       - "8000:8000"
       - "7088:7088"
       - "7089:7089"
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/janus/info"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     networks:
       - mafia-backend
     restart: always
@@ -40,14 +57,15 @@ services:
     build:
       context: ./mafia-server
       dockerfile: Dockerfile
+    entrypoint: ["wait-for-it.sh" , "rabbitmq:15672", "--strict" , "--timeout=300" , "--"]
     environment:
       - PORT=3000
     ports:
       - 3000:3000
       - 9229:9229
     depends_on:
-      - janus
       - rabbitmq
+      - janus
     volumes:
       - ./mafia-server:/usr/src/app
     networks:

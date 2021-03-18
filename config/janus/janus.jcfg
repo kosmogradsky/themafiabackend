@@ -386,6 +386,6 @@ loggers: {
 # not other media-related events).
 events: {
 	broadcast = true
-	disable = "libjanus_sampleevh.so,libjanus_nanomsgevh.so,libjanus_rabbitmqevh.so,libjanus_gelfevh.so"
+	disable = "libjanus_sampleevh.so,libjanus_nanomsgevh.so,libjanus_wsevh.so,libjanus_gelfevh.so"
 	#stats_period = 5
 }
