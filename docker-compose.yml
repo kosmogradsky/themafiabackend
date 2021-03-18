@@ -26,7 +26,8 @@ services:
     build:
       context: ./config/docker/janus
       dockerfile: Dockerfile
-    entrypoint: ["wait-for-it.sh" , "rabbitmq:15672", "--strict" , "--timeout=300" , "--"]
+    entrypoint:
+      ["wait-for-it.sh", "rabbitmq:15672", "--strict", "--timeout=300", "--"]
     command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
     volumes:
       - ./config/janus:/usr/local/etc/janus
@@ -53,16 +54,36 @@ services:
       - mafia-backend
     restart: always
 
+  janus-microservice:
+    build:
+      context: ./janus-microservice
+      dockerfile: Dockerfile
+    entrypoint: ["wait-for-it.sh", "rabbitmq:15672", "--strict", "--timeout=300", "--"]
+    environment:
+    - TEST=test
+    ports:
+      - 9229:9229
+    depends_on:
+      - rabbitmq
+      - janus
+    volumes:
+      - ./janus-microservice:/usr/src/app
+    networks:
+      - mafia-backend
+    command: npm run start:debug
+    restart: always
+
   app:
     build:
       context: ./mafia-server
       dockerfile: Dockerfile
-    entrypoint: ["wait-for-it.sh" , "rabbitmq:15672", "--strict" , "--timeout=300" , "--"]
+    entrypoint:
+      ["wait-for-it.sh", "rabbitmq:15672", "--strict", "--timeout=300", "--"]
     environment:
       - PORT=3000
     ports:
       - 3000:3000
-      - 9229:9229
+      - 9230:9229
     depends_on:
       - rabbitmq
       - janus
