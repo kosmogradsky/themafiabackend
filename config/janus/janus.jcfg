@@ -8,7 +8,7 @@ general: {
 	plugins_folder = "/usr/local/lib/janus/plugins"			# Plugins folder
 	transports_folder = "/usr/local/lib/janus/transports"	# Transports folder
 	events_folder = "/usr/local/lib/janus/events"			# Event handlers folder
-	loggers_folder = "/usr/local/lib/janus/loggers"			# External loggers folder
+	# loggers_folder = "/usr/local/lib/janus/loggers"			# External loggers folder
 
 		# The next settings configure logging
 	log_to_stdout = false					# Whether the Janus output should be written
@@ -19,7 +19,7 @@ general: {
 	debug_colors = false					# Whether colors should be disabled in the log
 	debug_locks = false						# Whether to enable debugging of locks (very verbose!)
 
-	daemonize = true						# Whether Janus should run as a daemon
+	# daemonize = true						# Whether Janus should run as a daemon
 											# or not (default=run in foreground)
 	pid_file = "/run/janus.pid"		# PID file to create when Janus has been
 											# started, and to destroy at shutdown
