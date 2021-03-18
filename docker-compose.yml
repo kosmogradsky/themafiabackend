@@ -1,0 +1,56 @@
+version: "3"
+
+networks:
+  mafia-backend:
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    volumes:
+      - ./local/rabbitmq-data:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq
+      - ./local/rabbitmq-logs:/var/log/rabbitmq/log
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - mafia-backend
+    restart: always
+
+  janus:
+    image: "canyan/janus-gateway:latest"
+    command: ["/usr/local/bin/janus", "-F", "/usr/local/etc/janus"]
+    volumes:
+      - ./config/janus:/usr/local/etc/janus
+      - ./config/letsencrypt:/etc/letsencrypt
+      - ./local/janus-logs/janus.log:/var/log/janus.log
+    ports:
+      - "8188:8188"
+      - "8088:8088"
+      - "8089:8089"
+      - "8889:8889"
+      - "8000:8000"
+      - "7088:7088"
+      - "7089:7089"
+    networks:
+      - mafia-backend
+    restart: always
+
+  app:
+    build:
+      context: ./mafia-server
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+    ports:
+      - 3000:3000
+      - 9229:9229
+    depends_on:
+      - janus
+      - rabbitmq
+    volumes:
+      - ./mafia-server:/usr/src/app
+    networks:
+      - mafia-backend
+    command: npm run start:debug
+    restart: always
