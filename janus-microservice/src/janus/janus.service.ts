@@ -5,7 +5,7 @@ import {
   JanusRequest,
   JanusPlugin,
   JanusCommandRequest,
-} from '../../interfaces/janusrequest.interface';
+} from './interfaces/janusrequest.interface';
 
 @Injectable()
 export class JanusService {

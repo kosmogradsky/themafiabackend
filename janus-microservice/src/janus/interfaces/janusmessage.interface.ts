@@ -1,10 +1,10 @@
-interface JanusEvent {
+class JanusEvent {
   transport: string;
   id: number;
   data: Record<string, unknown>;
 }
 
-export interface JanusMessage {
+export class JanusMessage {
   emitter: string;
   type: number;
   timestamp: number;

@@ -12,12 +12,12 @@ export type JanusPlugin =
   | 'textroom'
   | 'echotest';
 
-export interface JanusCommandBody {
+export class JanusCommandBody {
   audio?: boolean;
   video?: boolean;
 }
 
-export interface JanusRequest {
+export class JanusRequest {
   janus: JanusCommand;
   body?: JanusCommandBody;
   plugin?: JanusPlugin;
@@ -25,6 +25,6 @@ export interface JanusRequest {
   apisecret: string;
 }
 
-export interface JanusCommandRequest extends JanusRequest {
+export class JanusCommandRequest extends JanusRequest {
   janus: 'message';
 }
