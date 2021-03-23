@@ -1,7 +1,7 @@
 interface JanusEvent {
   transport: string;
   id: number;
-  data: object
+  data: Record<string, unknown>;
 }
 
 export interface JanusMessage {
@@ -9,5 +9,5 @@ export interface JanusMessage {
   type: number;
   timestamp: number;
   session_id: number;
-  event: JanusEvent
+  event: JanusEvent;
 }

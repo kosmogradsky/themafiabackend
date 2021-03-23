@@ -9,4 +9,4 @@ import { JanusService } from './services/janus/janus.service';
   controllers: [AppController],
   providers: [AppService, JanusService],
 })
-export class AppModule { }
+export class AppModule {}
