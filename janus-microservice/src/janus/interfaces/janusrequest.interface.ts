@@ -13,6 +13,19 @@ export type JanusPlugin =
   | 'echotest';
 
 export class JanusCommandBody {
+  request?:
+    | 'create'
+    | 'destroy'
+    | 'edit'
+    | 'exists'
+    | 'list'
+    | 'allowed'
+    | 'kick'
+    | 'listparticipants';
+  room?: number;
+  is_private?: boolean;
+  allowed?: string[];
+  id?: string;
   audio?: boolean;
   video?: boolean;
 }

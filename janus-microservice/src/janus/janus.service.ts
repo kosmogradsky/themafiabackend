@@ -15,13 +15,18 @@ export class JanusService {
 
   constructor(private http: HttpService) {}
 
+  generateTransaction() {
+    return Math.random().toString(36).slice(2);
+  }
+
   getJanusInfo() {
     return this.http
       .get(this.janusAPIBaseUrl + 'info/')
       .pipe(map((response) => response.data));
   }
 
-  createSession(transaction: string) {
+  createSession() {
+    const transaction = this.generateTransaction();
     this.logger.log(
       `Trying to create a session with transaction: ${transaction}...`,
     );
@@ -37,7 +42,8 @@ export class JanusService {
       .pipe(map((response) => response.data));
   }
 
-  destroySession(transaction: string, session: string) {
+  destroySession(session: string) {
+    const transaction = this.generateTransaction();
     this.logger.log(
       `Trying to destroy session ${session} with transaction ${transaction}...`,
     );
@@ -53,7 +59,8 @@ export class JanusService {
       .pipe(map((response) => response.data));
   }
 
-  attachPlugin(transaction: string, session: string, plugin: JanusPlugin) {
+  attachPlugin(session: string, plugin: JanusPlugin) {
+    const transaction = this.generateTransaction();
     this.logger.log(
       `Trying to attach plugin ${plugin} to session ${session} with transaction ${transaction}...`,
     );
@@ -70,7 +77,8 @@ export class JanusService {
       .pipe(map((response) => response.data));
   }
 
-  detachPlugin(transaction: string, session: string, plugin: JanusPlugin) {
+  detachPlugin(session: string, plugin: JanusPlugin) {
+    const transaction = this.generateTransaction();
     this.logger.log(
       `Trying to detach plugin ${plugin} from session ${session} with transaction ${transaction}...`,
     );
@@ -87,7 +95,8 @@ export class JanusService {
       .pipe(map((response) => response.data));
   }
 
-  hangupPeerConnection(transaction: string, session: string) {
+  hangupPeerConnection(session: string) {
+    const transaction = this.generateTransaction();
     this.logger.log(
       `Trying to hangup PeerConnection for session ${session} with transaction ${transaction}...`,
     );
@@ -103,7 +112,8 @@ export class JanusService {
       .pipe(map((response) => response.data));
   }
 
-  toggleAudio(transaction: string, session: string, audio: boolean) {
+  toggleAudio(session: string, audio: boolean) {
+    const transaction = this.generateTransaction();
     this.logger.log(
       `Trying to toggle audio to ${audio} for session ${session} with transaction ${transaction}...`,
     );
@@ -122,7 +132,8 @@ export class JanusService {
       .pipe(map((response) => response.data));
   }
 
-  toggleVideo(transaction: string, session: string, video: boolean) {
+  toggleVideo(session: string, video: boolean) {
+    const transaction = this.generateTransaction();
     this.logger.log(
       `Trying to toggle video to ${video} for session ${session} with transaction ${transaction}...`,
     );
@@ -142,10 +153,11 @@ export class JanusService {
   }
 
   sendCommand(
-    transaction: string,
     session: string,
     request: JanusCommandRequest,
+    pluginEndpoint = '',
   ) {
+    const transaction = this.generateTransaction();
     this.logger.log(
       `Trying to send command request ${request} for session ${session} with transaction ${transaction}...`,
     );
@@ -154,7 +166,7 @@ export class JanusService {
     request.apisecret = this.janusAPISecret;
 
     return this.http
-      .post(this.janusAPIBaseUrl + `${session}/`, request)
+      .post(this.janusAPIBaseUrl + `${session}/${pluginEndpoint}`, request)
       .pipe(map((response) => response.data));
   }
 }
