@@ -1,5 +1,5 @@
 import { Controller, Get, Logger } from '@nestjs/common';
-import { MessagePattern, RmqContext, Ctx } from '@nestjs/microservices';
+import { RmqContext, Ctx, EventPattern } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
 import { JanusService } from './janus.service';
@@ -11,10 +11,10 @@ export class JanusController {
 
   private logger: Logger = new Logger(JanusController.name);
 
-  @MessagePattern()
+  //@MessagePattern()
+  @EventPattern() //we do not need to answer anything to MQ here
   handleMessage(@Ctx() context: RmqContext) {
     let originalMessages = context.getMessage().content.toString();
-
     try {
       originalMessages = JSON.parse(originalMessages);
     } catch (e) {
