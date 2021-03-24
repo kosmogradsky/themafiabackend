@@ -1,10 +1,12 @@
 import { IPlayer } from './player.interface';
 
+export type Team = 'mafia' | 'civilians' | undefined;
+
 export class IGame {
   janusSession: string | undefined;
   videoRoom: string | undefined;
   day: number;
-  winner: 'mafia' | 'civilians' | undefined;
+  winner: Team;
   mafiaPlayers: IPlayer[];
   civilianPlayers: IPlayer[];
   narrator: IPlayer;
