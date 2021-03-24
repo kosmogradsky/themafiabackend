@@ -73,6 +73,17 @@ services:
     command: npm run start:debug
     restart: always
 
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    volumes:
+      - ./local/postgres:/var/lib/postgresql/data
+
   app:
     build:
       context: ./mafia-server
@@ -87,6 +98,7 @@ services:
     depends_on:
       - rabbitmq
       - janus
+      - postgres
     volumes:
       - ./mafia-server:/usr/src/app
     networks:
