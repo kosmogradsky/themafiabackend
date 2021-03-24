@@ -1,9 +1,10 @@
 import { Player } from './player.interface';
 
 export class Game {
-  janusSession: string | null;
+  janusSession: string | undefined;
+  videoRoom: string | undefined;
   day: number;
-  winner: 'mafia' | 'civilians' | null;
+  winner: 'mafia' | 'civilians' | undefined;
   mafiaPlayers: Player[];
   civilianPlayers: Player[];
   narrator: Player;
