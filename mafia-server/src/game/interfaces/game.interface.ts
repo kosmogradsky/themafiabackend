@@ -1,11 +1,11 @@
-import { Player } from './player.interface';
+import { IPlayer } from './player.interface';
 
-export class Game {
+export class IGame {
   janusSession: string | undefined;
   videoRoom: string | undefined;
   day: number;
   winner: 'mafia' | 'civilians' | undefined;
-  mafiaPlayers: Player[];
-  civilianPlayers: Player[];
-  narrator: Player;
+  mafiaPlayers: IPlayer[];
+  civilianPlayers: IPlayer[];
+  narrator: IPlayer;
 }
