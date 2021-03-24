@@ -1,3 +1,6 @@
+import { ConfigModule } from '@nestjs/config';
+ConfigModule.forRoot({ isGlobal: true });
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
