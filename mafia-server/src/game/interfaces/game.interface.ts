@@ -7,7 +7,5 @@ export class IGame {
   videoRoom: string | undefined;
   day: number;
   winner: Team;
-  mafiaPlayers: IPlayer[];
-  civilianPlayers: IPlayer[];
-  narrator: IPlayer;
+  players: IPlayer[];
 }
