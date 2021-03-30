@@ -22,6 +22,6 @@ export class Player {
   @Column()
   role: Role;
 
-  @ManyToOne(() => Game, (game) => game.players)
+  @ManyToOne(() => Game, (game) => game.players, { nullable: true })
   game: Game;
 }
