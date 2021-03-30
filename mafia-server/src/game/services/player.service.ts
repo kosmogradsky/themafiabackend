@@ -32,15 +32,15 @@ export class PlayerService {
     return this.playersRepository.findOne(id);
   }
 
-  async update(id: number, playerData: PlayerDTO): Promise<Player> {
-    const player = await this.playersRepository.findOne(id);
+  async update(playerData: PlayerDTO): Promise<Player> {
+    const player = await this.playersRepository.findOne(playerData.id);
     if (!player) return player;
 
     return await this.playersRepository.save(Object.assign(player, playerData));
   }
 
   async addToGame(id: number, game: Game): Promise<Player> {
-    return await this.update(id, { game: game });
+    return await this.update({ id: id, game: game });
   }
 
   async create(playerData: PlayerDTO): Promise<Player> {
