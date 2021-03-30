@@ -1,6 +1,6 @@
 export type MafiaRole = 'mafia' | 'godfather';
 export type CivilianRole = 'civilian' | 'sheriff';
-export type Role = MafiaRole | CivilianRole | 'narrator';
+export type Role = MafiaRole | CivilianRole | 'narrator' | undefined;
 
 export class IPlayer {
   //TODO: link with User once it's ready
