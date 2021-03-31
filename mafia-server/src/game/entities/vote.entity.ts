@@ -2,9 +2,9 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { GameState } from './gamestate.entity';
 import { Player } from './player.entity';
 
-@Entity()
+@Entity({ name: 'vote' })
 export class Vote {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @ManyToOne(() => Player, (player) => player.votes)
