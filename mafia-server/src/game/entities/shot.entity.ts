@@ -4,7 +4,7 @@ import { Player } from './player.entity';
 
 @Entity()
 export class Shot {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @ManyToOne(() => Player, (player) => player.shots)

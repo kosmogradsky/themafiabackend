@@ -12,22 +12,22 @@ import { Vote } from './vote.entity';
 
 @Entity()
 export class Player {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   is_alive: boolean;
 
-  @Column({ default: false })
+  @Column({ type: 'boolean', default: false })
   is_exposed: boolean;
 
-  @Column({ default: 0 })
+  @Column({ type: 'int', default: 0 })
   fouls: number;
 
-  @Column()
+  @Column({ type: 'varchar', default: '' })
   role: Role;
 
   @ManyToOne(() => Game, (game) => game.players, { nullable: true })

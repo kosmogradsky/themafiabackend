@@ -5,10 +5,10 @@ import { Vote } from './vote.entity';
 
 @Entity()
 export class GameState {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   phase: GamePhase;
 
   @OneToMany(() => Vote, (vote) => vote.game_state)

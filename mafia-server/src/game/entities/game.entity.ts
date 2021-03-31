@@ -12,19 +12,19 @@ import { Player } from './player.entity';
 
 @Entity()
 export class Game {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar', default: '' })
   janusSession: string;
 
-  @Column()
+  @Column({ type: 'varchar', default: '' })
   videoRoom: string;
 
-  @Column({ default: 0 })
+  @Column({ type: 'int', default: 0 })
   day: number;
 
-  @Column()
+  @Column({ type: 'varchar', default: '' })
   winner: Team;
 
   @OneToMany(() => Player, (player) => player.game)
