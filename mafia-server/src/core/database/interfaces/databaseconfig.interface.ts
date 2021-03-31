@@ -1,3 +1,6 @@
+class IDatabaseCLI {
+  migrationsDir: string;
+}
 export class IDatabaseConfigParameters {
   type: string;
   host: string;
@@ -10,6 +13,9 @@ export class IDatabaseConfigParameters {
   logging: boolean | string[];
   autoLoadEntities: boolean;
   logger?: string; //TODO: implement custom Nest.js logger for TypeORM
+  migrationsTableName: string;
+  migrations: string[];
+  cli: IDatabaseCLI;
 }
 
 export class IDatabaseConfig {

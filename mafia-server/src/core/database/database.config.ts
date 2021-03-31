@@ -7,11 +7,16 @@ const databaseConfig: IDatabaseConfig = {
     port: Number(process.env.POSTGRESQL_PORT_DEV),
     username: process.env.POSTGRESQL_USER_DEV,
     password: process.env.POSTGRESQL_PASSWORD_DEV,
-    database: process.env.POSTGRESQL_DB_DEV,
-    entities: [],
+    database: process.env.POSTGRES_DB_DEV,
+    entities: ['src/**/entities/*.entity{.ts,.js}'],
     synchronize: true,
     logging: true,
     autoLoadEntities: true,
+    migrationsTableName: 'migrations',
+    migrations: ['src/migrations/*.ts'],
+    cli: {
+      migrationsDir: 'src/migrations',
+    },
   },
   testing: {
     type: 'postgres',
@@ -19,11 +24,16 @@ const databaseConfig: IDatabaseConfig = {
     port: Number(process.env.POSTGRESQL_PORT_TEST),
     username: process.env.POSTGRESQL_USER_TEST,
     password: process.env.POSTGRESQL_PASSWORD_TEST,
-    database: process.env.POSTGRESQL_DB_TEST,
+    database: process.env.POSTGRES_DB_TEST,
     entities: [],
     synchronize: false,
     logging: true,
     autoLoadEntities: true,
+    migrationsTableName: 'migrations',
+    migrations: ['src/migrations/*.ts'],
+    cli: {
+      migrationsDir: 'src/migrations',
+    },
   },
   production: {
     type: 'postgres',
@@ -36,6 +46,11 @@ const databaseConfig: IDatabaseConfig = {
     synchronize: false,
     logging: true, //["error"]
     autoLoadEntities: true,
+    migrationsTableName: 'migrations',
+    migrations: ['src/migrations/*.ts'],
+    cli: {
+      migrationsDir: 'src/migrations',
+    },
   },
 };
 
