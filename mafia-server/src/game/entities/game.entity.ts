@@ -1,5 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Team } from '../interfaces/game.interface';
+import { GameState } from './gamestate.entity';
 import { Player } from './player.entity';
 
 @Entity()
@@ -21,4 +29,8 @@ export class Game {
 
   @OneToMany(() => Player, (player) => player.game)
   players: Player[];
+
+  @OneToOne(() => GameState)
+  @JoinColumn()
+  state: GameState;
 }

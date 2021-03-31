@@ -1,3 +1,5 @@
+import { IShot, IVote } from './game.interface';
+
 export type MafiaRole = 'mafia' | 'godfather';
 export type CivilianRole = 'civilian' | 'sheriff';
 export type Role = MafiaRole | CivilianRole | 'narrator' | undefined;
@@ -10,4 +12,8 @@ export class IPlayer {
   is_exposed: boolean;
   fouls: number;
   role: Role;
+  votes: IVote[];
+  votes_against: IVote[];
+  shots: IShot[];
+  shots_against: IShot[];
 }

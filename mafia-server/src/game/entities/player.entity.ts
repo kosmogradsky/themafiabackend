@@ -1,6 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Role } from '../interfaces/player.interface';
 import { Game } from './game.entity';
+import { Shot } from './shot.entity';
+import { Vote } from './vote.entity';
 
 @Entity()
 export class Player {
@@ -24,4 +32,16 @@ export class Player {
 
   @ManyToOne(() => Game, (game) => game.players, { nullable: true })
   game: Game;
+
+  @OneToMany(() => Vote, (vote) => vote.player)
+  votes: Vote[];
+
+  @OneToMany(() => Vote, (vote) => vote.choice)
+  votes_against: Vote[];
+
+  @OneToMany(() => Shot, (shot) => shot.player)
+  shots: Shot[];
+
+  @OneToMany(() => Shot, (shot) => shot.aim)
+  shots_against: Shot[];
 }
