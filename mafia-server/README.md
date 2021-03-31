@@ -8,6 +8,13 @@ Mafia backend
 $ npm install
 ```
 
+## Migrations
+
+```bash
+$ npm run typeorm -- migration:generate
+$ npm run typeorm -- migration:run
+```
+
 ## Running the app
 
 ```bash
