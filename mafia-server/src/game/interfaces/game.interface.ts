@@ -5,17 +5,19 @@ export type GamePhase = 'day' | 'night' | 'voting' | 'created' | 'finished';
 
 export class IVote {
   player: IPlayer;
-  vote: IPlayer;
+  choice: IPlayer;
+  readonly created_at?: string;
 }
 
-export class IShooting {
+export class IShot {
   player: IPlayer;
-  shot: IPlayer;
+  aim: IPlayer;
+  readonly created_at?: string;
 }
 export class IGameState {
   phase: GamePhase;
   lastVote: IVote[];
-  lastShooting: IShooting[];
+  lastShooting: IShot[];
 }
 export class IGame {
   janusSession: string | undefined;
@@ -23,5 +25,5 @@ export class IGame {
   day: number;
   winner: Team;
   players: IPlayer[];
-  gameState: IGameState;
+  state: IGameState;
 }
