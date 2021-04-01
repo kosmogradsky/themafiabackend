@@ -1,4 +1,5 @@
-import { Team } from '../interfaces/game.interface';
+import { IGameState, Team } from '../interfaces/game.interface';
+import { IPlayer } from '../interfaces/player.interface';
 
 export class GameDTO {
   readonly id?: number;
@@ -6,4 +7,6 @@ export class GameDTO {
   videoRoom?: string;
   day?: number;
   winner?: Team;
+  players?: IPlayer[];
+  state?: IGameState;
 }
