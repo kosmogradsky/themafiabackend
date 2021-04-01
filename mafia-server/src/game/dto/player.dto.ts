@@ -1,4 +1,4 @@
-import { IGame } from '../interfaces/game.interface';
+import { IGame, IShot, IVote } from '../interfaces/game.interface';
 import { Role } from '../interfaces/player.interface';
 
 export class PlayerDTO {
@@ -9,4 +9,8 @@ export class PlayerDTO {
   fouls?: number;
   role?: Role;
   game?: IGame;
+  votes?: IVote[];
+  votes_against?: IVote[];
+  shots?: IShot[];
+  shots_against?: IShot[];
 }
