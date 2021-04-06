@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventEmitter2 } from 'eventemitter2';
 import { Repository } from 'typeorm';
 import { ShotDTO } from '../dto/shot.dto';
 import { Player } from '../entities/player.entity';
 import { Shot } from '../entities/shot.entity';
+import { ShotFiredEvent } from '../events/shot.event';
 
 @Injectable()
 export class ShotService {
   constructor(
     @InjectRepository(Shot)
     private shotRepository: Repository<Shot>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   getAll(): Promise<Shot[]> {
@@ -29,7 +32,13 @@ export class ShotService {
   }
 
   async create(shotData: ShotDTO): Promise<Shot> {
-    return await this.shotRepository.save(shotData);
+    const shot = await this.shotRepository.save(shotData);
+
+    const shotFiredEvent = new ShotFiredEvent();
+    shotFiredEvent.shot = shot;
+    this.eventEmitter.emit('shot.created', shotFiredEvent);
+
+    return shot;
   }
 
   async delete(id: number): Promise<void> {

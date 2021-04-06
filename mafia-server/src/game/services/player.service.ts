@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventEmitter2 } from 'eventemitter2';
 import { Repository } from 'typeorm';
 import { PlayerDTO } from '../dto/player.dto';
 import { Game } from '../entities/game.entity';
 import { Player } from '../entities/player.entity';
+import {
+  FoulAssignedEvent,
+  PlayerKickedEvent,
+  PlayerKilledEvent,
+} from '../events/player.event';
 import { Role } from '../interfaces/player.interface';
 
 @Injectable()
@@ -11,6 +17,7 @@ export class PlayerService {
   constructor(
     @InjectRepository(Player)
     private playersRepository: Repository<Player>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   getAll(): Promise<Player[]> {
@@ -37,6 +44,39 @@ export class PlayerService {
     if (!player) return player;
 
     return await this.playersRepository.save(Object.assign(player, playerData));
+  }
+
+  async kill(playerData: PlayerDTO): Promise<Player> {
+    playerData.is_alive = false;
+    const player = await this.update(playerData);
+
+    const playerKilledEvent = new PlayerKilledEvent();
+    playerKilledEvent.player = player;
+    this.eventEmitter.emit('player.killed', playerKilledEvent);
+
+    return player;
+  }
+
+  async kick(playerData: PlayerDTO): Promise<Player> {
+    playerData.game = null;
+    const player = await this.update(playerData);
+
+    const playerKickedEvent = new PlayerKickedEvent();
+    playerKickedEvent.player = player;
+    this.eventEmitter.emit('player.kicked', playerKickedEvent);
+
+    return player;
+  }
+
+  async addFoul(playerData: PlayerDTO): Promise<Player> {
+    playerData.fouls += 1;
+    const player = await this.update(playerData);
+
+    const foulAssignedEvent = new FoulAssignedEvent();
+    foulAssignedEvent.player = player;
+    this.eventEmitter.emit('player.foul', foulAssignedEvent);
+
+    return player;
   }
 
   async addToGame(id: number, game: Game): Promise<Player> {

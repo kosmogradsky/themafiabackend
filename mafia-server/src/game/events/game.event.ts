@@ -1,11 +1,11 @@
 import { IGame } from '../interfaces/game.interface';
 
-export class JanusSessionCreated {
+export class JanusSessionCreatedEvent {
   game: IGame;
   janusSession: string;
 }
 
-export class JanusVideoRoomCreated {
+export class JanusVideoRoomCreatedEvent {
   game: IGame;
   videoRoom: string;
 }
