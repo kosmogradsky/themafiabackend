@@ -6,6 +6,10 @@ import { GameState } from './entities/gamestate.entity';
 import { Player } from './entities/player.entity';
 import { Shot } from './entities/shot.entity';
 import { Vote } from './entities/vote.entity';
+import { GameListener } from './listeners/game.listener';
+import { PlayerListener } from './listeners/player.listener';
+import { ShotListener } from './listeners/shot.listener';
+import { VoteListener } from './listeners/vote.listener';
 import { GameService } from './services/game.service';
 import { PlayerService } from './services/player.service';
 
@@ -15,6 +19,13 @@ import { PlayerService } from './services/player.service';
     EventEmitterModule.forRoot(),
   ],
   exports: [TypeOrmModule],
-  providers: [PlayerService, GameService],
+  providers: [
+    PlayerService,
+    GameService,
+    ShotListener,
+    VoteListener,
+    PlayerListener,
+    GameListener,
+  ],
 })
 export class GameModule {}
