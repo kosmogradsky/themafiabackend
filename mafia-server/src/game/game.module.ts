@@ -6,6 +6,7 @@ import { GameState } from './entities/gamestate.entity';
 import { Player } from './entities/player.entity';
 import { Shot } from './entities/shot.entity';
 import { Vote } from './entities/vote.entity';
+import { GameGateway } from './gateways/game.gateway';
 import { GameListener } from './listeners/game.listener';
 import { PlayerListener } from './listeners/player.listener';
 import { ShotListener } from './listeners/shot.listener';
@@ -26,6 +27,7 @@ import { PlayerService } from './services/player.service';
     VoteListener,
     PlayerListener,
     GameListener,
+    GameGateway,
   ],
 })
 export class GameModule {}
