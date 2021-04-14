@@ -6,8 +6,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Socket } from 'node:net';
-import { Server } from 'ws';
+import { Socket, Server } from 'socket.io';
 
 @WebSocketGateway(Number(process.env.WS_PORT))
 export class GameGateway {
