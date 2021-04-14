@@ -30,7 +30,7 @@ export class Game {
   @OneToMany(() => Player, (player) => player.game)
   players: Player[];
 
-  @OneToOne(() => GameState)
+  @OneToOne(() => GameState, (state) => state.game)
   @JoinColumn()
   state: GameState;
 }

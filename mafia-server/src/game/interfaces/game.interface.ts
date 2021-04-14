@@ -21,6 +21,7 @@ export class IGameState {
   phase: GamePhase;
   lastVote: IVote[];
   lastShooting: IShot[];
+  game: IGame;
 }
 export class IGame {
   id: number;
