@@ -1,4 +1,5 @@
 import { IDatabaseConfig } from './interfaces/databaseconfig.interface';
+import { join } from 'path';
 
 const databaseConfig: IDatabaseConfig = {
   development: {
@@ -8,7 +9,7 @@ const databaseConfig: IDatabaseConfig = {
     username: process.env.POSTGRESQL_USER_DEV,
     password: process.env.POSTGRESQL_PASSWORD_DEV,
     database: process.env.POSTGRES_DB_DEV,
-    entities: ['src/**/entities/*.entity{.ts,.js}'],
+    entities: [join(__dirname, '**', '*.entity.{ts,js}')],
     synchronize: true,
     logging: true,
     autoLoadEntities: true,
