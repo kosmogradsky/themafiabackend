@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -15,7 +15,7 @@ import { PlayerDTO } from '../dto/player.dto';
 import { ShotDTO } from '../dto/shot.dto';
 import { VoteDTO } from '../dto/vote.dto';
 
-@WebSocketGateway(Number(process.env.WS_PORT))
+@WebSocketGateway()
 export class GameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -39,6 +39,7 @@ export class GameGateway
     this.logger.log(`Client ${client.id} disconnected`);
   }
 
+  @UsePipes(ValidationPipe)
   @SubscribeMessage('state.get')
   handleStateRequest(
     @MessageBody() data: string,
@@ -51,6 +52,7 @@ export class GameGateway
     return data;
   }
 
+  @UsePipes(ValidationPipe)
   @SubscribeMessage('role.assign')
   handleRoleAssignment(
     @MessageBody() data: string,
@@ -63,6 +65,7 @@ export class GameGateway
     return data;
   }
 
+  @UsePipes(ValidationPipe)
   @SubscribeMessage('player.update')
   handlePlayerUpdate(
     @MessageBody() data: string,
@@ -75,6 +78,7 @@ export class GameGateway
     return data;
   }
 
+  @UsePipes(ValidationPipe)
   @SubscribeMessage('vote.create')
   handleVote(
     @MessageBody() data: string,
@@ -87,6 +91,7 @@ export class GameGateway
     return data;
   }
 
+  @UsePipes(ValidationPipe)
   @SubscribeMessage('shot.create')
   handleShot(
     @MessageBody() data: string,
@@ -99,6 +104,7 @@ export class GameGateway
     return data;
   }
 
+  @UsePipes(ValidationPipe)
   @SubscribeMessage('foul.create')
   handleFoul(
     @MessageBody() data: string,
@@ -111,6 +117,7 @@ export class GameGateway
     return data;
   }
 
+  @UsePipes(ValidationPipe)
   @SubscribeMessage('janus.*')
   handleMediaRequest(
     @MessageBody() data: string,
@@ -122,6 +129,7 @@ export class GameGateway
     return data;
   }
 
+  @UsePipes(ValidationPipe)
   @SubscribeMessage('events')
   onEvent(
     @MessageBody() data: string,
