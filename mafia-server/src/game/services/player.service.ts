@@ -68,7 +68,9 @@ export class PlayerService {
     return player;
   }
 
-  async addFoul(playerData: PlayerDTO): Promise<Player> {
+  async addFoul(playerData: PlayerDTO): Promise<false | Player> {
+    if (playerData.fouls >= 3) return false;
+
     playerData.fouls += 1;
     const player = await this.update(playerData);
 

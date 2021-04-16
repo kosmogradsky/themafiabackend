@@ -1,4 +1,4 @@
-import { Logger, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Logger, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -8,22 +8,34 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsResponse,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { GameStateDTO } from '../dto/gamestate.dto';
+import { FoulAssignmentDTO } from '../dto/foul.dto';
+import { GameDTO } from '../dto/game.dto';
 import { PlayerDTO } from '../dto/player.dto';
+import { RoleAssignmentDTO } from '../dto/role.assignment.dto';
 import { ShotDTO } from '../dto/shot.dto';
 import { VoteDTO } from '../dto/vote.dto';
+import { GameWsExceptionFilter } from '../filters/ws.exception.filter';
+import { GameService } from '../services/game.service';
+import { PlayerService } from '../services/player.service';
+import { ShotService } from '../services/shot.service';
+import { VoteService } from '../services/vote.service';
 
 @WebSocketGateway()
 export class GameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  constructor(
+    private gameService: GameService,
+    private playerService: PlayerService,
+    private shotService: ShotService,
+    private voteService: VoteService,
+  ) {}
   @WebSocketServer()
   server: Server;
 
   private logger: Logger = new Logger(GameGateway.name);
-
-  //TODO: better to have validation (pipes) for all @SubscribeMessage methods
 
   //TODO: authentication / guards should be added here as well
 
@@ -39,84 +51,103 @@ export class GameGateway
     this.logger.log(`Client ${client.id} disconnected`);
   }
 
+  @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('state.get')
-  handleStateRequest(
+  async handleStateRequest(
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
-  ): string {
-    const state: GameStateDTO = JSON.parse(data);
+  ): Promise<WsResponse> {
+    const game: GameDTO = JSON.parse(data);
     this.logger.log(
-      `Current game state requested for game ${state.game.id} from client ${client}`,
+      `Current game state requested for game ${game.id} from client ${client}`,
     );
-    return data;
+    const newGameData = await this.gameService.get(game.id);
+
+    return { event: 'state', data: newGameData };
   }
 
+  @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('role.assign')
-  handleRoleAssignment(
+  async handleRoleAssignment(
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
-  ): string {
-    const players: Record<string, unknown> = JSON.parse(data); //TODO: separate interface to add with validation pipes
+  ): Promise<WsResponse> {
+    const players: RoleAssignmentDTO[] = JSON.parse(data);
     this.logger.log(
       `Role assignment requested for players ${players} from client ${client}`,
     );
-    return data;
+    const roles = players.map(async (roleAssignment) => {
+      roleAssignment.player.role = roleAssignment.r_hash;
+      return (await this.playerService.update(roleAssignment.player))
+        ? roleAssignment
+        : false;
+    });
+    return { event: 'role.assign', data: roles };
   }
 
+  @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('player.update')
-  handlePlayerUpdate(
+  async handlePlayerUpdate(
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
-  ): string {
+  ): Promise<WsResponse> {
     const player: PlayerDTO = JSON.parse(data);
     this.logger.log(
       `Player update requested for player ${player.id} from client ${client}`,
     );
-    return data;
+    const newPlayerData = this.playerService.get(player.id);
+    return { event: 'player.update', data: newPlayerData };
   }
 
+  @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('vote.create')
-  handleVote(
+  async handleVote(
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
-  ): string {
+  ): Promise<WsResponse> {
     const vote: VoteDTO = JSON.parse(data);
     this.logger.log(
       `New vote requested: player ${vote.player.id} votes against ${vote.choice.id} in game ${vote.player.game.id} from client ${client}`,
     );
-    return data;
+    const newVote = await this.voteService.create(vote);
+    return { event: 'vote.create', data: newVote };
   }
 
+  @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('shot.create')
-  handleShot(
+  async handleShot(
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
-  ): string {
+  ): Promise<WsResponse> {
     const shot: ShotDTO = JSON.parse(data);
     this.logger.log(
       `New shot requested: player ${shot.player.id} shoots player ${shot.aim.id} in game ${shot.player.game.id} from client ${client}`,
     );
-    return data;
+    const newShot = await this.shotService.create(shot);
+    return { event: 'shot.create', data: newShot };
   }
 
+  @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('foul.create')
-  handleFoul(
+  async handleFoul(
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
-  ): string {
-    const foul: Record<string, PlayerDTO> = JSON.parse(data); //TODO: separate interface to add with validation pipes
+  ): Promise<WsResponse> {
+    const foul: FoulAssignmentDTO = JSON.parse(data);
     this.logger.log(
       `New foul requested for player ${foul.player.id} from client ${client}`,
     );
-    return data;
+    const newPlayerData = await this.playerService.addFoul(foul.player);
+    return { event: 'foul.create', data: newPlayerData };
   }
 
+  @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('janus.*')
   handleMediaRequest(
@@ -129,6 +160,7 @@ export class GameGateway
     return data;
   }
 
+  @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('events')
   onEvent(
