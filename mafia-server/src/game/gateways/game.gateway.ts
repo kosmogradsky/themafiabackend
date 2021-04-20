@@ -1,4 +1,11 @@
-import { Logger, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Inject,
+  Logger,
+  UseFilters,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import {
   ConnectedSocket,
   MessageBody,
@@ -13,6 +20,7 @@ import {
 import { Socket, Server } from 'socket.io';
 import { FoulAssignmentDTO } from '../dto/foul.dto';
 import { GameDTO } from '../dto/game.dto';
+import { JanusRequestDTO } from '../dto/janus.request.dto';
 import { PlayerDTO } from '../dto/player.dto';
 import { RoleAssignmentDTO } from '../dto/role.assignment.dto';
 import { ShotDTO } from '../dto/shot.dto';
@@ -27,6 +35,7 @@ import { VoteService } from '../services/vote.service';
 export class GameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(
+    @Inject('JANUS_SERVICE') private janusService: ClientProxy,
     private gameService: GameService,
     private playerService: PlayerService,
     private shotService: ShotService,
@@ -150,14 +159,19 @@ export class GameGateway
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('janus.*')
-  handleMediaRequest(
+  async handleMediaRequest(
     @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
-  ): string {
+  ): Promise<WsResponse> {
+    const janusRequest: JanusRequestDTO = JSON.parse(data);
+    janusRequest.apisecret = process.env.JANUS_API_SECRET;
+
     this.logger.log(
       `New media request for Janus: ${data} from client ${client}`,
     );
-    return data;
+    await this.janusService.connect();
+    const response = this.janusService.send(janusRequest.janus, janusRequest);
+    return { event: 'janus', data: response };
   }
 
   @UseFilters(GameWsExceptionFilter)
