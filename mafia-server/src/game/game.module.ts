@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Game } from './entities/game.entity';
 import { GameState } from './entities/gamestate.entity';
@@ -18,6 +19,9 @@ import { PlayerService } from './services/player.service';
   imports: [
     TypeOrmModule.forFeature([Player, Game, GameState, Vote, Shot]),
     EventEmitterModule.forRoot(),
+    ClientsModule.register([
+      { name: 'JANUS_SERVICE', transport: Transport.TCP },
+    ]),
   ],
   exports: [TypeOrmModule],
   providers: [
