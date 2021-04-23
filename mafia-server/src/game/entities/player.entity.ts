@@ -1,3 +1,4 @@
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
@@ -44,4 +45,7 @@ export class Player {
 
   @OneToMany(() => Shot, (shot) => shot.aim)
   shots_against: Shot[];
+
+  @ManyToOne(() => User, (user) => user.players)
+  user: User;
 }
