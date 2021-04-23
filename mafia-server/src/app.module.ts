@@ -6,9 +6,10 @@ import { DatabaseModule } from './core/database/database.module';
 
 import { GameModule } from './game/game.module';
 import { ApiModule } from './api/api.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [DatabaseModule, GameModule, ApiModule],
+  imports: [DatabaseModule, GameModule, ApiModule, UserModule],
   controllers: [AppController],
   providers: [AppService],
 })
