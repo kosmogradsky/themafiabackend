@@ -14,6 +14,8 @@ import { ShotListener } from './listeners/shot.listener';
 import { VoteListener } from './listeners/vote.listener';
 import { GameService } from './services/game.service';
 import { PlayerService } from './services/player.service';
+import { ShotService } from './services/shot.service';
+import { VoteService } from './services/vote.service';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { PlayerService } from './services/player.service';
   providers: [
     PlayerService,
     GameService,
+    ShotService,
+    VoteService,
     ShotListener,
     VoteListener,
     PlayerListener,
