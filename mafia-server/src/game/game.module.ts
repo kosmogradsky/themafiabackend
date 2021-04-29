@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from 'src/auth/auth.module';
+import { User } from 'src/user/entities/user.entity';
+import { UserModule } from 'src/user/user.module';
 import { Game } from './entities/game.entity';
 import { GameState } from './entities/gamestate.entity';
 import { Player } from './entities/player.entity';
@@ -19,7 +22,9 @@ import { VoteService } from './services/vote.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Player, Game, GameState, Vote, Shot]),
+    UserModule,
+    AuthModule,
+    TypeOrmModule.forFeature([Player, Game, GameState, Vote, Shot, User]),
     EventEmitterModule.forRoot(),
     ClientsModule.register([
       { name: 'JANUS_SERVICE', transport: Transport.TCP },

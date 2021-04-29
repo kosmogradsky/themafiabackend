@@ -2,10 +2,12 @@ import {
   Inject,
   Logger,
   UseFilters,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ConnectedSocket,
   MessageBody,
@@ -46,7 +48,7 @@ export class GameGateway
 
   private logger: Logger = new Logger(GameGateway.name);
 
-  //TODO: authentication / guards should be added here as well
+  //TODO: role guards to be added
 
   afterInit(server: Server) {
     this.logger.log(`Game Gateway initialized, server info - ${server}`);
@@ -60,6 +62,7 @@ export class GameGateway
     this.logger.log(`Client ${client.id} disconnected`);
   }
 
+  @UseGuards(AuthGuard())
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('state.get')
@@ -76,6 +79,7 @@ export class GameGateway
     return { event: 'state', data: newGameData };
   }
 
+  @UseGuards(AuthGuard())
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('role.assign')
@@ -96,6 +100,7 @@ export class GameGateway
     return { event: 'role.assign', data: roles };
   }
 
+  @UseGuards(AuthGuard())
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('player.update')
@@ -111,6 +116,7 @@ export class GameGateway
     return { event: 'player.update', data: newPlayerData };
   }
 
+  @UseGuards(AuthGuard())
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('vote.create')
@@ -126,6 +132,7 @@ export class GameGateway
     return { event: 'vote.create', data: newVote };
   }
 
+  @UseGuards(AuthGuard())
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('shot.create')
@@ -141,6 +148,7 @@ export class GameGateway
     return { event: 'shot.create', data: newShot };
   }
 
+  @UseGuards(AuthGuard())
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('foul.create')
@@ -156,6 +164,7 @@ export class GameGateway
     return { event: 'foul.create', data: newPlayerData };
   }
 
+  @UseGuards(AuthGuard())
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('janus.*')
@@ -174,6 +183,7 @@ export class GameGateway
     return { event: 'janus', data: response };
   }
 
+  @UseGuards(AuthGuard())
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('events')
