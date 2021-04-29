@@ -7,6 +7,7 @@ import { IJwtPayload } from '../interfaces/jwt.payload.interface';
 import { IJwtToken, ILoginStatus } from '../interfaces/login.status.interface';
 import { IRegistrationStatus } from '../interfaces/registration.status.interface';
 
+import * as jwt from 'jsonwebtoken';
 @Injectable()
 export class AuthService {
   constructor(
@@ -21,6 +22,10 @@ export class AuthService {
       expiresIn: process.env.JWT_EXPIRES_IN,
       accessToken,
     };
+  }
+
+  verify(authToken: string): IJwtPayload {
+    return <IJwtPayload>jwt.verify(authToken, process.env.JWT_SECRET_KEY);
   }
 
   async register(userDTO: UserDTO): Promise<IRegistrationStatus> {
