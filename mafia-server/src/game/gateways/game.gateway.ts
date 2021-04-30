@@ -32,6 +32,8 @@ import { GameService } from '../services/game.service';
 import { PlayerService } from '../services/player.service';
 import { ShotService } from '../services/shot.service';
 import { VoteService } from '../services/vote.service';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @WebSocketGateway()
 export class GameGateway
@@ -79,7 +81,8 @@ export class GameGateway
     return { event: 'state', data: newGameData };
   }
 
-  @UseGuards(AuthGuard())
+  @Roles('player_or_narrator')
+  @UseGuards(AuthGuard(), RolesGuard)
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('role.assign')
@@ -100,7 +103,8 @@ export class GameGateway
     return { event: 'role.assign', data: roles };
   }
 
-  @UseGuards(AuthGuard())
+  @Roles('player_or_narrator')
+  @UseGuards(AuthGuard(), RolesGuard)
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('player.update')
@@ -116,7 +120,8 @@ export class GameGateway
     return { event: 'player.update', data: newPlayerData };
   }
 
-  @UseGuards(AuthGuard())
+  @Roles('civilian', 'sheriff')
+  @UseGuards(AuthGuard(), RolesGuard)
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('vote.create')
@@ -132,7 +137,8 @@ export class GameGateway
     return { event: 'vote.create', data: newVote };
   }
 
-  @UseGuards(AuthGuard())
+  @Roles('mafia', 'godfather')
+  @UseGuards(AuthGuard(), RolesGuard)
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('shot.create')
@@ -148,7 +154,8 @@ export class GameGateway
     return { event: 'shot.create', data: newShot };
   }
 
-  @UseGuards(AuthGuard())
+  @Roles('narrator')
+  @UseGuards(AuthGuard(), RolesGuard)
   @UseFilters(GameWsExceptionFilter)
   @UsePipes(ValidationPipe)
   @SubscribeMessage('foul.create')
