@@ -30,9 +30,12 @@ export class PlayerService {
       : this.playersRepository.find({ game: game });
   }
 
-  getAllByUser() {
-    //TODO
-    return;
+  getAllByUser(userId: number) {
+    return this.playersRepository
+      .createQueryBuilder('getPlayersByUser')
+      .innerJoinAndSelect('players.user', 'user')
+      .where('user.id := userId', { userId })
+      .getMany();
   }
 
   get(id: number): Promise<Player> {

@@ -12,7 +12,7 @@ export class IDatabaseConfigParameters {
   synchronize: boolean;
   logging: boolean | string[];
   autoLoadEntities: boolean;
-  logger?: string; //TODO: implement custom Nest.js logger for TypeORM
+  logger?: string;
   migrationsTableName: string;
   migrations: string[];
   cli: IDatabaseCLI;

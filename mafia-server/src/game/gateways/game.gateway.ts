@@ -50,8 +50,6 @@ export class GameGateway
 
   private logger: Logger = new Logger(GameGateway.name);
 
-  //TODO: role guards to be added
-
   afterInit(server: Server) {
     this.logger.log(`Game Gateway initialized, server info - ${server}`);
   }
