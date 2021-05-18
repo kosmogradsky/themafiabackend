@@ -1,3 +1,4 @@
+import { Lobby } from 'src/lobby/entities/lobby.entity';
 import {
   Column,
   Entity,
@@ -33,4 +34,7 @@ export class Game {
   @OneToOne(() => GameState, (state) => state.game)
   @JoinColumn()
   state: GameState;
+
+  @OneToOne(() => Lobby, (lobby) => lobby.game)
+  lobby: Lobby;
 }

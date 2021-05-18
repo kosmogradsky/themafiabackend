@@ -1,9 +1,11 @@
 import * as bcrypt from 'bcrypt';
 import { Player } from 'src/game/entities/player.entity';
+import { Lobby } from 'src/lobby/entities/lobby.entity';
 import {
   BeforeInsert,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -24,6 +26,9 @@ export class User {
 
   @OneToMany(() => Player, (player) => player.user)
   players: Player[];
+
+  @ManyToOne(() => Lobby, (lobby) => lobby.users)
+  lobby: Lobby;
 
   @BeforeInsert()
   async hashPassword() {
