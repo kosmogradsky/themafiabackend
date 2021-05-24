@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { JanusService } from './janus.service';
 import { JanusMessage } from './interfaces/janusmessage.interface';
+import { JanusCommandRequest } from './interfaces/janusrequest.interface';
 
 @Controller()
 export class JanusController {
@@ -11,8 +12,7 @@ export class JanusController {
 
   private logger: Logger = new Logger(JanusController.name);
 
-  //@MessagePattern()
-  @EventPattern() //we do not need to answer anything to MQ here
+  @EventPattern()
   handleMessage(@Ctx() context: RmqContext) {
     let originalMessages = context.getMessage().content.toString();
     try {
@@ -28,6 +28,10 @@ export class JanusController {
           message.type
         }`,
       );
+      this.janusService.sendCommand(message.toString(), {
+        janus: 'message',
+        apisecret: process.env.JANUS_API_SECRET,
+      });
     });
   }
 
