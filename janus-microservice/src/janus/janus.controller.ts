@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 
 import { JanusService } from './janus.service';
 import { JanusMessage } from './interfaces/janusmessage.interface';
-import { JanusCommandRequest } from './interfaces/janusrequest.interface';
 
 @Controller()
 export class JanusController {
