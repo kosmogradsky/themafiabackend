@@ -9,8 +9,10 @@ const databaseConfig: IDatabaseConfig = {
     username: process.env.POSTGRESQL_USER_DEV,
     password: process.env.POSTGRESQL_PASSWORD_DEV,
     database: process.env.POSTGRES_DB_DEV,
-    entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-    synchronize: true,
+    entities: [
+      join(__dirname + '../../../', '**', 'entities', '*.entity.{ts,js}'),
+    ],
+    synchronize: false, //set it to true for development
     logging: true,
     autoLoadEntities: true,
     migrationsTableName: 'migrations',
@@ -26,7 +28,9 @@ const databaseConfig: IDatabaseConfig = {
     username: process.env.POSTGRESQL_USER_TEST,
     password: process.env.POSTGRESQL_PASSWORD_TEST,
     database: process.env.POSTGRES_DB_TEST,
-    entities: [],
+    entities: [
+      join(__dirname + '../../../', '**', 'entities', '*.entity.{ts,js}'),
+    ],
     synchronize: false,
     logging: true,
     autoLoadEntities: true,
@@ -43,7 +47,9 @@ const databaseConfig: IDatabaseConfig = {
     username: process.env.POSTGRESQL_USER,
     password: process.env.POSTGRESQL_PASSWORD,
     database: process.env.POSTGRESQL_DB,
-    entities: [],
+    entities: [
+      join(__dirname + '../../../', '**', 'entities', '*.entity.{ts,js}'),
+    ],
     synchronize: false,
     logging: true, //["error"]
     autoLoadEntities: true,
